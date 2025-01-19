@@ -7,6 +7,45 @@ Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 
 
 def pregunta_01():
+
+
+    import os
+    import pandas as pd
+
+    def create_dataframe_from_directory(directory):
+        data = []
+        for sentiment in ['negative', 'neutral', 'positive']:
+            sentiment_dir = os.path.join(directory, sentiment)
+            if os.path.exists(sentiment_dir):
+                for filename in os.listdir(sentiment_dir):
+                    filepath = os.path.join(sentiment_dir, filename)
+                    with open(filepath, 'r', encoding='utf-8') as file:
+                        content = file.read()
+                        data.append([content, sentiment])
+            else:
+                print(f"La carpeta {sentiment_dir} no existe.")
+        return pd.DataFrame(data, columns=['content', 'sentiment'])
+
+    # Ajusta estas rutas según la ubicación real de tus carpetas
+    train_directory = r'D:\Unal\Analitica Descriptiva\Labs\2024-2-LAB-04-ingestion-de-texto-en-directorios-DanielOrozco09\files\input\train'
+    test_directory = r'D:\Unal\Analitica Descriptiva\Labs\2024-2-LAB-04-ingestion-de-texto-en-directorios-DanielOrozco09\files\input\test'
+
+    # Crear el DataFrame para la carpeta train
+    train_df = create_dataframe_from_directory(train_directory)
+
+    # Crear el DataFrame para la carpeta test
+    test_df = create_dataframe_from_directory(test_directory)
+
+
+    test_df = test_df.rename(columns = {'content': 'phrase', 'sentiment': 'target'})
+    train_df = train_df.rename(columns = {'content': 'phrase', 'sentiment': 'target'})
+
+
+    # Exportar los DataFrames a archivos CSV en el directorio actual
+    train_df.to_csv(r'D:\Unal\Analitica Descriptiva\Labs\2024-2-LAB-04-ingestion-de-texto-en-directorios-DanielOrozco09\files\output\train_dataset.csv', index=False)
+    test_df.to_csv(r'D:\Unal\Analitica Descriptiva\Labs\2024-2-LAB-04-ingestion-de-texto-en-directorios-DanielOrozco09\files\output\test_dataset.csv', index=False)
+
+    print("Los DataFrames se han exportado a archivos CSV: 'train_data.csv' y 'test_data.csv'.")
     """
     La información requerida para este laboratio esta almacenada en el
     archivo "files/input.zip" ubicado en la carpeta raíz.
